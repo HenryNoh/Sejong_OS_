@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Search Engine</title>
+    <link rel="icon" type="image/gif/png" href="./assets/icon/logo.png">
+    <link rel="stylesheet" href="/assets/style.css">
+    <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+    <script src="./assets/hamburger.js"></script>
+</head>
+
+<body>
+    <div class="wrapper">
+        <!-- header start-->
+        <form class="header" action="/search" id='word' method="post">
+            <div class="search">
+                <a href="/" class="search_logo fl1">
+                    <img src="./assets/icon/logo.png" alt="">
+                </a>
+                <input class = "search_tag fs fl8" type="text" name="search_word" placeholder="검색어를 입력하세요">
+                <div class = "search_click fl1" onclick="document.getElementById('word').submit();">
+                    <img src="./assets/icon/search.png" alt="">
+                </div>
+                <input class = "search_button" type="submit" value="검색">
+            </div>
+        </form>
+        <!-- header finish-->
+
+        <!-- nav start -->
+        <div class="nav fs">
+            <div class="fl1"></div>
+            <a class="fl2" id="h" href="/">home</a>
+            <a class="fl2" id="g" href="/google">google</a>
+            <a class="fl2" id="n" href="/naver">naver</a>
+            <a class="fl2" id="d" href="/daum">daum</a>
+            <div class="fl1"></div>
+        </div>
+        <!-- nav finish -->
+
+        <!-- body start -->
+        <div class="body fs fl_col">
+            <div class ="r_w fl1 fl_row">
+                <%for (i=0;i<10;i++){%>
+                <div class ="box fl_col" id="<%=i%>">
+                    <a href="<%=data[i].url%>"><%=data[i].title%></a>
+                    <div class="size fl_row">
+                        <span><img src="<%=data[i].img%>" alt=""></span>
+                        <div id="text"><%=data[i].text%></div>
+                    </div>
+                    <span> mark / logo <img src="" alt=""> </span>
+                </div>
+                <%}%>
+            </div>
+            <div class ="r_w fl1 fl_row">
+                <%for (i=10;i<20;i++){%>
+                <div class ="box fl_col" id="<%=i%>">
+                    <a href="<%=data[i].url%>"><%=data[i].title%></a>
+                    <div class="size fl_row">
+                        <span><img src="<%=data[i].img%>" alt=""></span>
+                        <div id="text"><%=data[i].text%></div>
+                    </div>
+                    <span> mark / logo <img src="" alt=""> </span>
+                </div>
+                <%}%>
+            </div>
+            <div class ="r_w fl1 fl_row">
+                <%for (i=0;i<10;i++){%>
+                <div class ="box fl_col" id="<%=i%>">
+                    <a href="<%=data[i].url%>"><%=data[i].title%></a>
+                    <div class="size fl_row">
+                        <span><img src="<%=data[i].img%>" alt=""></span>
+                        <div id="text"><%=data[i].text%></div>
+                    </div>
+                    <span> mark / logo <img src="" alt=""> </span>
+                </div>
+                <%}%>
+            </div>
+        </div>
+        <!-- body finish -->
+        
+        <!-- footer start -->
+        <div class="footer">
+
+        </div>
+        <!-- footer finish -->
+    </div>
+</body>
+</html>
+
+<!--
+    ajax로 페이지 불러오기!!!! 
+    화면넘김으로 페이지 구성할수있게?<-고민
+    게시판정렬
+-->

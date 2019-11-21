@@ -1,0 +1,30 @@
+<div class="rt_title fl1">
+        실시간 인기 검색어
+    </div>
+    <div class="rt fl8 fl_row">
+        <!-- naver start -->
+        <div class="rt_naver_table fl1 fl_col">
+            <%for (var key=0; key<9; key++){%>
+            <span class="one">
+                <span id="num"><%=data[key].number%></span> <a href="<%=data[key].href%>"><%=data[key].title%></a>
+            </span>
+            <% } %>
+            <span class="one">
+                <span id="num"><%=data[9].number%></span><a href="<%=data[9].href%>"><%=data[9].title%></a>
+            </span>
+        </div>
+        <!-- naver finish -->
+        <!-- daum start-->
+        <div class="rt_daum_table fl1 fl_col">
+            <%for (var key=20; key<29; key++){%>
+            <span class="one">
+                <span id="num"><%=data[key].number%></span> <a href="<%=data[key].href%>"><%=data[key].title%></a>
+            </span>
+            <% } %>
+            <span class="one">
+                <span id="num"><%=data[29].number%></span><a href="<%=data[29].href%>"><%=data[29].title%></a>
+            </span>
+        </div>
+        <!-- daum finish -->
+    </div>
+    <div class="fl1"></div>
