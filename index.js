@@ -87,28 +87,31 @@ function searching_web_naver(req,response){
                 img: $(this).find('img').attr('src')
             }
         })
-        response.render(__dirname+'/views/search.ejs',{data:ulList});
-        // searching_google(req,response);
+        // response.render(__dirname+'/views/search.ejs',{data:ulList});
+        searching_google(req,response);
     })
 }
-// function searching_google(req,response){
-//     request(`https://www.google.com/search?q=hello&oq=${req.body.search_word}&aqs=chrome.0.69i59j35i39j0l5j69i60.663j0j8&sourceid=chrome&ie=UTF-8`, function (err, res, body){
-//         if (err) throw err
-//         $ = cheerio.load(body);
-//         $test = $("body > div.gb_Rd")
-//         console.log($test.text());
-//         // $list.each(function(i,elem){
-//         //     ulList[i+20]={
-//         //         title: $(elem).find('div > div > div.r > a > h3 > span').text(),
-//         //         url: $(elem).find('div > div > div.r > a').attr('href'),
-//         //         text: $(elem).find('div > div > div.s > div:nth-child(2) > span.st').text(),
-//         //         img: $(elem).find('div > div > div.s > div:nth-child(1) > div > a > g-img > img').attr('src')
-//         //     }
-//         // })
-//         response.render(__dirname+'/views/search.ejs',{data:ulList});
-//         // searching_blog_daum(req,response);
-//     })
-// }
+// eef4718
+function searching_google(req,response){
+    request(`https://www.google.com/search?q=${req.body.search_word}`, function (err, res, body){
+        if (err) throw err
+        $ = cheerio.load(body);
+        $test = $("#main > #mw");
+        // $test2 = $("#rso > div:nth-child(1) > div > div:nth-child(1) > div > div > div.r > a > h3 > span");
+        console.log($test.html());
+        // console.log($test2.text());
+        // $list.each(function(i,elem){
+        //     ulList[i+20]={
+        //         title: $(elem).find('div > div > div.r > a > h3 > span').text(),
+        //         url: $(elem).find('div > div > div.r > a').attr('href'),
+        //         text: $(elem).find('div > div > div.s > div:nth-child(2) > span.st').text(),
+        //         img: $(elem).find('div > div > div.s > div:nth-child(1) > div > a > g-img > img').attr('src')
+        //     }
+        // })
+        response.render(__dirname+'/views/search.ejs',{data:ulList});
+        // searching_blog_daum(req,response);
+    })
+}
 // function searching_blog_daum(req,response){
 //     request(`https://search.daum.net/search?w=news&nil_search=btn&DA=NTB&enc=utf8&cluster=y&cluster_page=1&q${req.body.search_word}`, function (err, res, body){
 //         if (err) throw err
