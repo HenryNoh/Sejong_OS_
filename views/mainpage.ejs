@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Search Engine</title>
+    <link rel="icon" type="image/gif/png" href="./assets/icon/logo.png">
+    <link rel="stylesheet" href="/assets/style.css">
+    <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+    <script src="./assets/app.js"></script>
+</head>
+<body>    
+    <!-- main start -->
+    <div class="container_mp">
+        <div class="cover"></div>
+        <div class="fl2"></div>
+        <div class="title fl1"></div>
+
+        <!-- search bar / logo start -->
+        <div class = "searching_mp fl2">
+            <form class="search" action="/search" id='word' method="post">
+                <div class="wrapper_sr fl_row">
+                    <input class = "search_tag fs fl8" type="text" name="search_word" placeholder="검색어를 입력하세요">
+                    <div class = "search_click fl1" onclick="document.getElementById('word').submit();">
+                        <img src="./assets/icon/search.png" alt="">
+                    </div>
+                    <input class = "search_button" type="submit" value="검색">
+                </div>
+            </form>
+        </div>
+        <!-- search bar / logo finish -->
+        <!-- realtime start -->
+        <div class="wrapper_rt fl5 fs">
+            <% include realtime.ejs%>
+        </div>
+        <!-- realtime finish -->
+    </div>
+    <!-- main finish -->
+    <!-- hamburger-button start-->
+    <a href="#" class="hamburger-button">
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+    </a>
+
+    <form name="search" action="/search" method="post">
+    </form>
+    <form name="daum" action="/daum" method="post">
+    </form>
+    <form name="naver" action="/naver" method="post">
+    </form>
+    <form name="google" action="/google" method="post">
+    </form>
+
+    <div class="nav_mobile_sidebar">
+        <nav class="fs">
+            <ul>
+                <li class="nav_mobile"><a href="#" onclick="javascript:document.search.submit();">total</a></li>
+                <li class="nav_mobile"><a href="#" onclick="javascript:document.daum.submit();">daum</a></li>
+                <li class="nav_mobile"><a href="#" onclick="javascript:document.naver.submit();">naver</a></li>
+                <li class="nav_mobile"><a href="#" onclick="javascript:document.google.submit();">google</a></li>
+            </ul>
+        </nav>
+    </div>
+    <!-- hamburger-button finish-->
+</body>
+</html>
