@@ -13,7 +13,7 @@
 <body>
     <div class="wrapper">
         <!-- header start-->
-        <form class="header" action="/search" id='word' method="post">
+        <form class="header" action="/naver" id='word' method="post">
             <div class="search">
                 <a href="/" class="search_logo fl1">
                     <img src="./assets/icon/logo.png" alt="">
@@ -38,9 +38,9 @@
         </form>
         <div class="nav fs">
             <div class="fl1"></div>
-            <a class="fl2" id="h" href="/">home</a>
+            <a class="fl2" id="h" href="#" onclick="javascript:document.search.submit();">total</a>
             <a class="fl2" id="g" href="#" onclick="javascript:document.google.submit();">google</a>
-            <a class="fl2" id="n" href="#" onclick="javascript:document.naver.submit();">naver</a>
+            <a class="fl2 this_n" id="n" href="#" onclick="javascript:document.naver.submit();">naver</a>
             <a class="fl2" id="d" href="#" onclick="javascript:document.daum.submit();">daum</a>
             <div class="fl1"></div>
         </div>

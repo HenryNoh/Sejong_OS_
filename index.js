@@ -3,18 +3,12 @@ const path = require('path')
 const app = express()
 const cheerio = require('cheerio')
 const request = require('request')
-const iconv = require('iconv-lite')
-
 var rtList = [];
 var ulList = [];
 app.use('/assets', express.static(path.join(__dirname, 'assets')))
 app.use(express.json());
 app.use(express.urlencoded());
 
-// cheerio.set('headers',{
-//     'user-agent' : 'Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36',
-//     'Accept-Charset': 'utf-8'
-// });
 // ------------------------------------------crawling start---------------------------------------
 function crawling_naver(){
     crawling_daum();
@@ -52,7 +46,6 @@ function render_mainpage(){
     })
 }
 crawling_naver();
-
 // ------------------------------------------crawling finish--------------------------------------
 
 // ------------------------------------------render start------------------------------------------
@@ -87,8 +80,7 @@ function searching_web_naver(req,response){
         url : encodeURI(`https://search.naver.com/search.naver?where=webkr&sm=tab_jum&query=${req.body.search_word}`),
         headers: {
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.108 Safari/537.36'
-        },
-        encoding:null
+        }
     }
     request(options2, function (err, res, body){
         if (err) throw err   
@@ -110,8 +102,7 @@ function searching_blog_daum(req,response){
         url : encodeURI(`https://search.daum.net/search?w=blog&enc=utf8&q=${req.body.search_word}`),
         headers: {
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.108 Safari/537.36'
-        },
-        encoding:null
+        }
     }
     request(options3, function (err, res, body){
         if (err) throw err
@@ -133,8 +124,7 @@ function searching_web_daum(req,response){
         url : encodeURI(`https://search.daum.net/search?w=site&enc=utf8&q=${req.body.search_word}`),
         headers: {
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.108 Safari/537.36'
-        },
-        encoding:null
+        }
     }
     request(options4, function (err, res, body){
         if (err) throw err   
@@ -156,13 +146,12 @@ function searching_google(req,response){
         url : encodeURI(`https://www.google.com/search?q=${req.body.search_word}`),
         headers: {
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.108 Safari/537.36'
-        },
-        encoding:null
+        }
     }
     request(options5, function (err, res, body){
         if (err) throw err
         $ = cheerio.load(body);
-        $list = $("#rso >div > div").children("div.g");
+        $list = $("#rso > div > div").children("div.g");
         $list.each(function(i,elem){
             ulList[i+40]={
                 title: $(elem).find('div.r > a > h3 > span').text(),
@@ -181,12 +170,18 @@ app.post('/naver',(req,res)=>{
     searching_blog_naver2(req,res);
 })
 function searching_blog_naver2(req,response){
-    request(`https://search.naver.com/search.naver?where=post&sm=tab_jum&query=${req.body.search_word}`, function (err, res, body){
-        if (err) throw err   
+    var options1 = {
+        url : encodeURI(`https://search.naver.com/search.naver?where=post&sm=tab_jum&query=${req.body.search_word}`),
+        headers: {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.108 Safari/537.36'
+        }
+    }
+    request(options1, function (err, res, body){
+        if (err) throw err
         $ = cheerio.load(body);
         $list = $("#elThumbnailResultArea").children("li.sh_blog_top");
         $list.each(function(i,elem){
-            ulList[i*2]={
+            ulList[i]={
                 title: $(this).find('dl > dt > a').text(),
                 url: $(this).find('dl > dt > a').attr('href'),
                 text: $(this).find('dl > dd.sh_blog_passage').text(),
@@ -197,12 +192,18 @@ function searching_blog_naver2(req,response){
     })
 }
 function searching_web_naver2(req,response){
-    request(`https://search.naver.com/search.naver?where=webkr&sm=tab_jum&query=${req.body.search_word}`, function (err, res, body){
+    var options2 = {
+        url : encodeURI(`https://search.naver.com/search.naver?where=webkr&sm=tab_jum&query=${req.body.search_word}`),
+        headers: {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.108 Safari/537.36'
+        }
+    }
+    request(options2, function (err, res, body){
         if (err) throw err   
         $ = cheerio.load(body);
         $list = $("#elThumbnailResultArea").children("li.sh_web_top");
         $list.each(function(i,elem){
-            ulList[(i*2+1)]={
+            ulList[i+10]={
                 title: $(this).find('dt > a').text(),
                 url: $(this).find('dt > a').attr('href'),
                 text: $(this).find('dd').text(),
@@ -216,34 +217,46 @@ function searching_web_naver2(req,response){
 
 // ------------------------------------------daum start--------------------------------------------
 app.post('/daum',(req,res)=>{
-    searching_blog_naver2(req,res);
+    searching_blog_daum2(req,res);
 })
-function searching_blog_naver2(req,response){
-    request(`https://search.naver.com/search.naver?where=post&sm=tab_jum&query=${req.body.search_word}`, function (err, res, body){
-        if (err) throw err   
+function searching_blog_daum2(req,response){
+    var options3 = {
+        url : encodeURI(`https://search.daum.net/search?w=blog&enc=utf8&q=${req.body.search_word}`),
+        headers: {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.108 Safari/537.36'
+        }
+    }
+    request(options3, function (err, res, body){
+        if (err) throw err
         $ = cheerio.load(body);
-        $list = $("#elThumbnailResultArea").children("li.sh_blog_top");
+        $list = $("#blogColl > div > ul.list_info").children("li");
         $list.each(function(i,elem){
-            ulList[i*2]={
-                title: $(this).find('dl > dt > a').text(),
-                url: $(this).find('dl > dt > a').attr('href'),
-                text: $(this).find('dl > dd.sh_blog_passage').text(),
-                img: $(this).find(' div > a.sp_thmb.thmb80 > img').attr('src'),
+            ulList[i+20]={
+                title: $(this).find('div.wrap_cont > div > div > a').text(),
+                url: $(this).find('div.wrap_cont > div > div > a').attr('href'),
+                text: $(this).find('div.wrap_cont > div > p').text(),
+                img: $(this).find('img').attr('src')
             }
         })
-        searching_web_naver2(req,response);
+        searching_web_daum2(req,response);
     })
 }
-function searching_web_naver2(req,response){
-    request(`https://search.naver.com/search.naver?where=webkr&sm=tab_jum&query=${req.body.search_word}`, function (err, res, body){
+function searching_web_daum2(req,response){
+    var options4 = {
+        url : encodeURI(`https://search.daum.net/search?w=site&enc=utf8&q=${req.body.search_word}`),
+        headers: {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.108 Safari/537.36'
+        }
+    }
+    request(options4, function (err, res, body){
         if (err) throw err   
         $ = cheerio.load(body);
-        $list = $("#elThumbnailResultArea").children("li.sh_web_top");
+        $list = $("#siteColl > div > div > ul.list_info").children("li");
         $list.each(function(i,elem){
-            ulList[(i*2+1)]={
-                title: $(this).find('dt > a').text(),
-                url: $(this).find('dt > a').attr('href'),
-                text: $(this).find('dd').text(),
+            ulList[i+30]={
+                title: $(this).find('div.wrap_cont > div > div > a').text(),
+                url: $(this).find('div.wrap_cont > div > div > a').attr('href'),
+                text: $(this).find('div.wrap_cont > div > p').text(),
                 img: $(this).find('img').attr('src')
             }
         })
@@ -254,35 +267,25 @@ function searching_web_naver2(req,response){
 
 // ------------------------------------------google start------------------------------------------
 app.post('/google',(req,res)=>{
-    searching_blog_naver2(req,res);
+    searching_google2(req,res);
 })
-function searching_blog_naver2(req,response){
-    request(`https://search.naver.com/search.naver?where=post&sm=tab_jum&query=${req.body.search_word}`, function (err, res, body){
-        if (err) throw err   
+function searching_google2(req,response){
+    var options5 = {
+        url : encodeURI(`https://www.google.com/search?q=${req.body.search_word}`),
+        headers: {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.108 Safari/537.36'
+        }
+    }
+    request(options5, function (err, res, body){
+        if (err) throw err
         $ = cheerio.load(body);
-        $list = $("#elThumbnailResultArea").children("li.sh_blog_top");
+        $list = $("#rso > div > div").children("div.g");
         $list.each(function(i,elem){
-            ulList[i*2]={
-                title: $(this).find('dl > dt > a').text(),
-                url: $(this).find('dl > dt > a').attr('href'),
-                text: $(this).find('dl > dd.sh_blog_passage').text(),
-                img: $(this).find(' div > a.sp_thmb.thmb80 > img').attr('src'),
-            }
-        })
-        searching_web_naver2(req,response);
-    })
-}
-function searching_web_naver2(req,response){
-    request(`https://search.naver.com/search.naver?where=webkr&sm=tab_jum&query=${req.body.search_word}`, function (err, res, body){
-        if (err) throw err   
-        $ = cheerio.load(body);
-        $list = $("#elThumbnailResultArea").children("li.sh_web_top");
-        $list.each(function(i,elem){
-            ulList[(i*2+1)]={
-                title: $(this).find('dt > a').text(),
-                url: $(this).find('dt > a').attr('href'),
-                text: $(this).find('dd').text(),
-                img: $(this).find('img').attr('src')
+            ulList[i+40]={
+                title: $(elem).find('div.r > a > h3 > span').text(),
+                url: $(elem).find('div.r > a').attr('href'),
+                text: $(elem).find('div.s > div > span').text(),
+                img: $(elem).find('div.s > div > a > g-img > img').attr('alt')
             }
         })
         response.render(__dirname+'/views/templates/google.ejs',{data:ulList});

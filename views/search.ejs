@@ -38,7 +38,7 @@
         </form>
         <div class="nav fs">
             <div class="fl1"></div>
-            <a class="fl2" id="h" href="/">home</a>
+            <a class="fl2 this_h" id="h" href="#" onclick="javascript:document.search.submit();">total</a>
             <a class="fl2" id="g" href="#" onclick="javascript:document.google.submit();">google</a>
             <a class="fl2" id="n" href="#" onclick="javascript:document.naver.submit();">naver</a>
             <a class="fl2" id="d" href="#" onclick="javascript:document.daum.submit();">daum</a>
@@ -67,7 +67,7 @@
                 <%}%>
             </div>
             <div class ="r_w fl_row">
-                <%for (i=40;i<45;i++){%>
+                <%for (i=40;i<49;i++){%>
                     <div class ="box fl_col a_g" id="<%=i%>">
                         <span><a href="<%=data[i].url%>"><img src="<%=data[i].img%>" alt=""></a></span>
                         <a class="url" href="<%=data[i].url%>"><%=data[i].title%></a>
