@@ -3,6 +3,7 @@ const path = require('path')
 const app = express()
 const cheerio = require('cheerio')
 const request = require('request')
+
 var rtList = [];
 var ulList = [];
 app.use('/assets', express.static(path.join(__dirname, 'assets')))
@@ -87,47 +88,36 @@ function searching_web_naver(req,response){
                 img: $(this).find('img').attr('src')
             }
         })
-        // response.render(__dirname+'/views/search.ejs',{data:ulList});
+        searching_blog_daum(req,response);
+    })
+}
+function searching_blog_daum(req,response){
+    var options2 = {
+        url : `https://search.daum.net/search?w=news&nil_search=btn&DA=NTB&enc=utf8&cluster=y&cluster_page=1&q${req.body.search_word}`,
+        headers: {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.108 Safari/537.36'
+        }
+
+    }
+    request(options2, function (err, res, body){
+        if (err) throw err
+        $ = cheerio.load(body);
+        $test = $("#mArticle > div > div:nth-child(3)");
+        console.log($test.html());
+        $test2 = $("#blogColl");
+        console.log($test2.html());
+        // $list = $("ul.list_info").children("li");
+        // $list.each(function(i,elem){
+        //     ulList[i+20]={
+        //         title: $(this).find('div.wrap_cont > div > div > a').text(),
+        //         url: $(this).find('div.wrap_cont > div > div > a').attr('href'),
+        //         text: $(this).find('div.wrap_cont > div > p').text()
+        //         // img: $(this).find('img').attr('src'),
+        //     }
+        // })
         searching_google(req,response);
     })
 }
-// eef4718
-function searching_google(req,response){
-    request(`https://www.google.com/search?q=${req.body.search_word}`, function (err, res, body){
-        if (err) throw err
-        $ = cheerio.load(body);
-        $test = $("#main > #mw");
-        // $test2 = $("#rso > div:nth-child(1) > div > div:nth-child(1) > div > div > div.r > a > h3 > span");
-        console.log($test.html());
-        // console.log($test2.text());
-        // $list.each(function(i,elem){
-        //     ulList[i+20]={
-        //         title: $(elem).find('div > div > div.r > a > h3 > span').text(),
-        //         url: $(elem).find('div > div > div.r > a').attr('href'),
-        //         text: $(elem).find('div > div > div.s > div:nth-child(2) > span.st').text(),
-        //         img: $(elem).find('div > div > div.s > div:nth-child(1) > div > a > g-img > img').attr('src')
-        //     }
-        // })
-        response.render(__dirname+'/views/search.ejs',{data:ulList});
-        // searching_blog_daum(req,response);
-    })
-}
-// function searching_blog_daum(req,response){
-//     request(`https://search.daum.net/search?w=news&nil_search=btn&DA=NTB&enc=utf8&cluster=y&cluster_page=1&q${req.body.search_word}`, function (err, res, body){
-//         if (err) throw err
-//         $ = cheerio.load(body);
-//         $list = $("#clusterResultUL").children("li");
-//         $list.each(function(i,elem){
-//             ulList[i+20]={
-//                 title: $(this).find('div.wrap_cont > div > div > a').text(),
-//                 url: $(this).find('div.wrap_cont > div > div > a').attr('href'),
-//                 text: $(this).find('div.wrap_cont > div > p').text()
-//                 // img: $(this).find('img').attr('src'),
-//             }
-//         })
-//         response.render(__dirname+'/views/search.ejs',{data:ulList});
-//     })
-// }
 // function searching_web_daum(req,response){
 //     request(`https://search.daum.net/search?w=site&nil_search=btn&DA=NTB&enc=utf8&lpp=10&q=${req.body.search_word}`, function (err, res, body){
 //         if (err) throw err   
@@ -144,6 +134,30 @@ function searching_google(req,response){
 //         response.render(__dirname+'/views/search.ejs',{data:ulList});
 //     })
 // }
+function searching_google(req,response){
+    var options1 = {
+        url : `https://www.google.com/search?q=${req.body.search_word}`,
+        headers: {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.108 Safari/537.36'
+        }
+    }
+    request(options1, function (err, res, body){
+        if (err) throw err
+        $ = cheerio.load(body);
+        // $test = $("#vidthumb11");
+        // console.log($test.attr('src'));
+        $list = $("#rso > div:nth-child(2) > div.srg").children("div.g");
+        $list.each(function(i,elem){
+            ulList[i+30]={
+                title: $(elem).find('div.r > a > h3 > span').text(),
+                url: $(elem).find('div.r > a').attr('href'),
+                text: $(elem).find('div.s > div > span').text(),
+                img: $(elem).find('div.s > div > a > g-img > img').attr('alt')
+            }
+        })
+        response.render(__dirname+'/views/search.ejs',{data:ulList});
+    })
+}
 // ------------------------------------------total finish------------------------------------------
 
 // ------------------------------------------naver start-------------------------------------------
