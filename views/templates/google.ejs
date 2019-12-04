@@ -48,41 +48,14 @@
 
         <!-- body start -->
         <div class="body fs fl_col">
-            <div class ="r_w fl1 fl_row">
-                <%for (i=0;i<20;i++){%>
-                <div class ="box fl_col" id="<%=i%>">
-                    <a href="<%=data[i].url%>"><%=data[i].title%></a>
-                    <div class="size fl_row">
+            <div class ="r_w fl_row">
+                <%for (i=40;i<49;i++){%>
+                    <div class ="box fl_col a_g" id="<%=i%>">
+                        <span><a href="<%=data[i].url%>"><img src="<%=data[i].img%>" alt=""></a></span>
+                        <a class="url" href="<%=data[i].url%>"><%=data[i].title%></a>
                         <div id="text"><%=data[i].text%></div>
-                        <span><img src="<%=data[i].img%>" alt=""></span>
                     </div>
-                    <!-- <span> mark / logo <img src="" alt=""> </span> -->
-                </div>
                 <%}%>
-            </div>
-            <div class ="r_w fl1 fl_row">
-                <%for (i=10;i<20;i++){%>
-                <div class ="box fl_col" id="<%=i%>">
-                    <a href="<%=data[i].url%>"><%=data[i].title%></a>
-                    <div class="size fl_row">
-                        <div id="text"><%=data[i].text%></div>
-                        <span><img src="<%=data[i].img%>" alt=""></span>
-                    </div>
-                    <!-- <span> mark / logo <img src="" alt=""> </span> -->
-                </div>
-                <%}%>
-            </div>
-            <div class ="r_w fl1 fl_row">
-                <%for (i=0;i<10;i++){%>
-                <div class ="box fl_col" id="<%=i%>">
-                    <a href="<%=data[i].url%>"><%=data[i].title%></a>
-                    <div class="size fl_row">
-                        <div id="text"><%=data[i].text%></div>
-                        <span><img src="<%=data[i].img%>" alt=""></span>
-                    </div>
-                    <!-- <span> mark / logo <img src="" alt=""> </span> -->
-                </div>
-                <%}%>3.3
             </div>
         </div>
         <!-- body finish -->

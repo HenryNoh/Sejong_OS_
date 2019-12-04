@@ -49,7 +49,7 @@
         <!-- body start -->
         <div class="body fs fl_col">
             <div class ="r_w fl_row">
-                <%for (i=0;i<10;i++){%>
+                <%for (i=0;i<20;i++){%>
                     <div class ="box fl_col a_n" id="<%=i%>">
                         <span><a href="<%=data[i].url%>"><img src="<%=data[i].img%>" alt=""></a></span>
                         <a class="url" href="<%=data[i].url%>"><%=data[i].title%></a>
@@ -58,8 +58,8 @@
                 <%}%>
             </div>
             <div class ="r_w fl_row">
-                <%for (i=10;i<20;i++){%>
-                    <div class ="box fl_col a_n" id="<%=i%>">
+                <%for (i=20;i<40;i++){%>
+                    <div class ="box fl_col a_d" id="<%=i%>">
                         <span><a href="<%=data[i].url%>"><img src="<%=data[i].img%>" alt=""></a></span>
                         <a class="url" href="<%=data[i].url%>"><%=data[i].title%></a>
                         <div id="text"><%=data[i].text%></div>
@@ -67,8 +67,8 @@
                 <%}%>
             </div>
             <div class ="r_w fl_row">
-                <%for (i=30;i<35;i++){%>
-                    <div class ="box fl_col a_n" id="<%=i%>">
+                <%for (i=40;i<45;i++){%>
+                    <div class ="box fl_col a_g" id="<%=i%>">
                         <span><a href="<%=data[i].url%>"><img src="<%=data[i].img%>" alt=""></a></span>
                         <a class="url" href="<%=data[i].url%>"><%=data[i].title%></a>
                         <div id="text"><%=data[i].text%></div>

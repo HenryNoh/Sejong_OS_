@@ -3,6 +3,7 @@ const path = require('path')
 const app = express()
 const cheerio = require('cheerio')
 const request = require('request')
+const iconv = require('iconv-lite')
 
 var rtList = [];
 var ulList = [];
@@ -60,8 +61,14 @@ app.post('/search',(req,res)=>{
     searching_blog_naver(req,res);
 })
 function searching_blog_naver(req,response){
-    request(`https://search.naver.com/search.naver?where=post&sm=tab_jum&query=${req.body.search_word}`, function (err, res, body){
-        if (err) throw err   
+    var options1 = {
+        url : encodeURI(`https://search.naver.com/search.naver?where=post&sm=tab_jum&query=${req.body.search_word}`),
+        headers: {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.108 Safari/537.36'
+        }
+    }
+    request(options1, function (err, res, body){
+        if (err) throw err
         $ = cheerio.load(body);
         $list = $("#elThumbnailResultArea").children("li.sh_blog_top");
         $list.each(function(i,elem){
@@ -76,7 +83,14 @@ function searching_blog_naver(req,response){
     })
 }
 function searching_web_naver(req,response){
-    request(`https://search.naver.com/search.naver?where=webkr&sm=tab_jum&query=${req.body.search_word}`, function (err, res, body){
+    var options2 = {
+        url : encodeURI(`https://search.naver.com/search.naver?where=webkr&sm=tab_jum&query=${req.body.search_word}`),
+        headers: {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.108 Safari/537.36'
+        },
+        encoding:null
+    }
+    request(options2, function (err, res, body){
         if (err) throw err   
         $ = cheerio.load(body);
         $list = $("#elThumbnailResultArea").children("li.sh_web_top");
@@ -92,63 +106,65 @@ function searching_web_naver(req,response){
     })
 }
 function searching_blog_daum(req,response){
-    var options2 = {
-        url : `https://search.daum.net/search?w=news&nil_search=btn&DA=NTB&enc=utf8&cluster=y&cluster_page=1&q${req.body.search_word}`,
+    var options3 = {
+        url : encodeURI(`https://search.daum.net/search?w=blog&enc=utf8&q=${req.body.search_word}`),
         headers: {
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.108 Safari/537.36'
-        }
-
+        },
+        encoding:null
     }
-    request(options2, function (err, res, body){
+    request(options3, function (err, res, body){
         if (err) throw err
         $ = cheerio.load(body);
-        $test = $("#mArticle > div > div:nth-child(3)");
-        console.log($test.html());
-        $test2 = $("#blogColl");
-        console.log($test2.html());
-        // $list = $("ul.list_info").children("li");
-        // $list.each(function(i,elem){
-        //     ulList[i+20]={
-        //         title: $(this).find('div.wrap_cont > div > div > a').text(),
-        //         url: $(this).find('div.wrap_cont > div > div > a').attr('href'),
-        //         text: $(this).find('div.wrap_cont > div > p').text()
-        //         // img: $(this).find('img').attr('src'),
-        //     }
-        // })
+        $list = $("#blogColl > div > ul.list_info").children("li");
+        $list.each(function(i,elem){
+            ulList[i+20]={
+                title: $(this).find('div.wrap_cont > div > div > a').text(),
+                url: $(this).find('div.wrap_cont > div > div > a').attr('href'),
+                text: $(this).find('div.wrap_cont > div > p').text(),
+                img: $(this).find('img').attr('src')
+            }
+        })
+        searching_web_daum(req,response);
+    })
+}
+function searching_web_daum(req,response){
+    var options4 = {
+        url : encodeURI(`https://search.daum.net/search?w=site&enc=utf8&q=${req.body.search_word}`),
+        headers: {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.108 Safari/537.36'
+        },
+        encoding:null
+    }
+    request(options4, function (err, res, body){
+        if (err) throw err   
+        $ = cheerio.load(body);
+        $list = $("#siteColl > div > div > ul.list_info").children("li");
+        $list.each(function(i,elem){
+            ulList[i+30]={
+                title: $(this).find('div.wrap_cont > div > div > a').text(),
+                url: $(this).find('div.wrap_cont > div > div > a').attr('href'),
+                text: $(this).find('div.wrap_cont > div > p').text(),
+                img: $(this).find('img').attr('src')
+            }
+        })
         searching_google(req,response);
     })
 }
-// function searching_web_daum(req,response){
-//     request(`https://search.daum.net/search?w=site&nil_search=btn&DA=NTB&enc=utf8&lpp=10&q=${req.body.search_word}`, function (err, res, body){
-//         if (err) throw err   
-//         $ = cheerio.load(body);
-//         $list = $(".coll_cont > mg_cont > ul.list_info").children("li");
-//         $list.each(function(i,elem){
-//             ulList[i+30]={
-//                 title: $(this).find('div > div > div > a').text(),
-//                 url: $(this).find('div > div > div > a').attr('href'),
-//                 text: $(this).find('div > div > p').text(),
-//                 // img: $(this).find('img').attr('src')
-//             }
-//         })
-//         response.render(__dirname+'/views/search.ejs',{data:ulList});
-//     })
-// }
 function searching_google(req,response){
-    var options1 = {
-        url : `https://www.google.com/search?q=${req.body.search_word}`,
+    var options5 = {
+        url : encodeURI(`https://www.google.com/search?q=${req.body.search_word}`),
         headers: {
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.108 Safari/537.36'
-        }
+        },
+        encoding:null
     }
-    request(options1, function (err, res, body){
+    request(options5, function (err, res, body){
         if (err) throw err
         $ = cheerio.load(body);
-        // $test = $("#vidthumb11");
-        // console.log($test.attr('src'));
-        $list = $("#rso > div:nth-child(2) > div.srg").children("div.g");
+        $list = $("#rso >div > div").children("div.g");
         $list.each(function(i,elem){
-            ulList[i+30]={
+            ulList[i+40]={
                 title: $(elem).find('div.r > a > h3 > span').text(),
                 url: $(elem).find('div.r > a').attr('href'),
                 text: $(elem).find('div.s > div > span').text(),
